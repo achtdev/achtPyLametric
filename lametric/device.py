@@ -111,3 +111,16 @@ class Time:
 
     def get_status(self) -> _Munch:
         return _munchify(x=self.api_call(route='/device'))
+
+### Derive my own Time class "Time2"
+###     - Extends the interact class to set widget_id and action_id independently
+class Time2(Time):
+    def interact(self, package_identifier: str, widget_identifier: str, parameters: dict = None,
+                activate: bool = True, useActivate: bool = True, ActionId: str = None) -> None:
+        body={
+            'id': ActionId if ActionId else widget_identifier, 'params': parameters if parameters else {}
+            }
+        if useActivate:
+            body['activate'] = activate
+        self.api_call(route=f'/device/apps/{package_identifier}/widgets/{widget_identifier}/actions', method='POST',
+                    body=body)
